@@ -83,15 +83,19 @@ void gamelogic() {
     setFontAttributes(textAmmo, font, bulletsInClip+"\\"+bulletsSpare, Color::White, Coordinates::AMMO_TEXT_X, Coordinates::AMMO_TEXT_Y, Configs::AMMO_FONT_SIZE);
     setFontAttributes(textWave, font, "Wave: 0", Color::White, Coordinates::WAVE_X, Coordinates::WAVE_Y, Configs::WAVE_FONT_SIZE);
 
-    ifstream inputFile(Paths::GAMEDATA_FILE_PATH);
-    if (inputFile.is_open()) {
-        inputFile >> highScore;
-        inputFile.close();
+    ifstream inputFile1(Paths::GAMEDATA_FILE_PATH);
+    if (inputFile1.is_open()) {
+        inputFile1 >> highScore;
+        inputFile1.close();
     }
-
+    
     int numZombies;
     int numZombieAlive;
-
+    ifstream inputFile2(Paths::ZOMBIES_FILE_PATH);
+    if (inputFile2.is_open()) {
+        inputFile2 >> numZombies;
+        inputFile2.close();
+    }
     vector<Zombie*> zombies;
 
     SoundBuffer hitBuffer, pickupBuffer, powerupBuffer, reloadBuffer, reloadFailedBuffer, shootBuffer, splatBuffer;
@@ -213,7 +217,8 @@ void gamelogic() {
                 player.spawn(resolution, arena, Configs::TILE_SIZE);
                 healthPickup.setArena(arena);
                 ammoPickup.setArena(arena);
-                numZombies = Configs::NUM_ZOMBIES;
+                if(numZombies == 0)
+                    numZombies = Configs::NUM_ZOMBIES;
                 zombies.clear();
                 zombies = createHorde(numZombies, arena);
                 numZombieAlive = numZombies;
